@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"strings"
 )
 
 var conditions = []int{3, 6, 9, 12, 18, 24}
@@ -14,8 +15,8 @@ type ProductConditions struct {
 
 var productData = map[string]ProductConditions{
 	"смартфон":  {9, 3},
-	"компьтер":  {9, 4},
-	"телевизор": {9, 5},
+	"компьтер":  {12, 4},
+	"телевизор": {18, 5},
 }
 
 func isValidCondition(term int) bool {
@@ -27,7 +28,7 @@ func isValidCondition(term int) bool {
 	return false
 }
 func TotalAmount(product string, amount float64, month int) (float64, error) {
-
+	product = strings.ToLower(strings.TrimSpace(product))
 	data, match := productData[product]
 	if !match {
 
@@ -60,14 +61,16 @@ func main() {
 	product := "смартфон"
 	price := 1000.0
 	term := 18
-	// phone := 992938001313
+	phone := 992938001313
 
 	total, err := TotalAmount(product, price, term)
 	if err != nil {
 		fmt.Println("Ошибка:", err)
 		return
 	}
-	fmt.Printf("Вы купили %s на %d месяцев. Общая сумма с комиссией: %.2f сомони",
+	message := fmt.Sprintf("Вы купили %s на %d месяцев. Сумма к оплате: %.2f сомони.",
 		product, term, total)
 
+	fmt.Println("Отправка смс на номер:", phone)
+	fmt.Println("смс:", message)
 }
